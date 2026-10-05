@@ -680,7 +680,7 @@ render_stories_table(table_display, comments_by_id)
 st.markdown('### Response Time Analysis (Pii vs SeaTec)')
 st.markdown(
     '<div style="color:#475569;font-size:14px;margin-bottom:16px;">'
-    'Tracking response turnarounds between <b style="color:#b45309;">Pii</b> (Vinita & Madhuja) and <b style="color:#2563eb;">SeaTec</b> (Terence). '
+    'Tracking response turnarounds between <b style="color:#b45309;">Pii</b> and <b style="color:#2563eb;">SeaTec</b>. '
     'Showing individual turnaround splits, sorted strictly by <b>total cumulative turnaround time</b> (longest to shortest).</div>',
     unsafe_allow_html=True,
 )
