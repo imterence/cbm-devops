@@ -1,0 +1,17 @@
+# Sensitive secrets and Streamlit config
+.streamlit/secrets.toml
+.env
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python cache & temporary files
+__pycache__/
+*.pyc
+*.pyo
+
+# Operating System temporary files
+.DS_Store
+Thumbs.db
