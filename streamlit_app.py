@@ -18,10 +18,17 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ── Connection Details ─────────────────────────────────────────────────────────
+# ── Connection Details & Secure Secrets Lookup ─────────────────────────────────
 ORG_URL = "https://dev.azure.com/vgroupframework"
 PROJECT = "SeaTec - CBM"
-PAT = st.secrets["AZURE_PAT"]
+
+# Safely read PAT from Streamlit secrets (local secrets.toml or Streamlit Cloud Secrets)
+try:
+    PAT = st.secrets["AZURE_PAT"]
+except (FileNotFoundError, KeyError):
+    st.error("⚠️ `AZURE_PAT` missing from Streamlit secrets. Please configure `.streamlit/secrets.toml` locally or set it in Streamlit Cloud Secrets.")
+    st.stop()
+
 AUTH = HTTPBasicAuth('', PAT)
 
 # ── State Configuration ────────────────────────────────────────────────────────
@@ -251,11 +258,6 @@ def local_css():
             margin: 0 !important;
         }
 
-        /* 1. Completely hide the widget header label so it never renders as a pill button */
-        [data-testid="stWidgetLabel"] {
-        display: none !important;
-        }
-
         [data-testid="stRadio"] [role="radiogroup"],
         [data-testid="stRadio"] > div {
             display: flex !important;
@@ -265,15 +267,28 @@ def local_css():
             align-items: center !important;
         }
 
-/* 2. Target ONLY option item labels inside the radiogroup */
-[data-testid="stRadio"] [role="radiogroup"] label,
-[data-testid="stRadio"] div[data-baseweb="radio"] {
-    background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 999px !important;
-    padding: 6px 16px !important;
-    cursor: pointer !important;
-}
+        /* Hide the widget title header to prevent extra un-clickable pill buttons */
+        [data-testid="stWidgetLabel"] {
+            display: none !important;
+        }
+
+        /* Target ONLY actual option labels inside the radio container */
+        [data-testid="stRadio"] [role="radiogroup"] label,
+        [data-testid="stRadio"] div[data-baseweb="radio"] {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 999px !important;
+            padding: 6px 16px !important;
+            margin: 0 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            color: #475569 !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+        }
 
         [data-testid="stRadio"] label:hover,
         [data-testid="stRadio"] div[data-baseweb="radio"]:hover {
@@ -401,46 +416,6 @@ def render_kpi_cards(state_list, total_count, selected_state):
     )
 
 
-def build_comment_popup_html(comments_list, is_top_row=False):
-    popup_class = "comment-tooltip-popup popup-down" if is_top_row else "comment-tooltip-popup popup-up"
-
-    if not comments_list:
-        return f"""
-            <div class="{popup_class}">
-                <div style="font-size:12px; font-weight:600; color:#64748b; text-align:center;">No comments yet</div>
-            </div>
-        """
-
-    comments_html = ""
-    for idx, c in enumerate(sorted(comments_list, key=lambda x: x['date']), 1):
-        author = html.escape(c.get('author', 'Unknown'))
-        body = html.escape(c.get('text', '')).replace('\n', '<br>')
-        try:
-            date_obj = datetime.fromisoformat(c['date'].replace('Z', '+00:00'))
-            formatted_date = date_obj.strftime('%b %d, %I:%M %p')
-        except Exception:
-            formatted_date = html.escape(c.get('date', ''))
-
-        comments_html += f"""
-            <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 8px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                    <span style="font-size:12px; font-weight:700; color:#0f172a;">#{idx} {author}</span>
-                    <span style="font-size:10px; color:#64748b;">{formatted_date}</span>
-                </div>
-                <div style="font-size:12px; color:#334155; line-height:1.4;">{body}</div>
-            </div>
-        """
-
-    return f"""
-        <div class="{popup_class}">
-            <div style="font-size:12px; font-weight:700; color:#2f5edb; margin-bottom:8px; border-bottom:1px solid #cbd5e1; padding-bottom:4px;">
-                💬 Discussion History
-            </div>
-            {comments_html}
-        </div>
-    """
-
-
 def render_stories_table(table_df, comments_by_id):
     rows_html = ""
     icon_map = {
@@ -459,7 +434,7 @@ def render_stories_table(table_df, comments_by_id):
         )
         id_html = f'<span style="display:inline-block; background:#f8fafc; color:#334155; border:1px solid #e2e8f0; border-radius:6px; padding:2px 8px; font-size:11px; font-weight:700;">#{item_id}</span>'
 
-        # Determine popup direction so popups in upper rows drop DOWN and lower rows pop UP
+        # Determine popup direction so upper rows drop DOWN and lower rows pop UP
         is_upper_half = (row_idx < len(table_df) / 2)
         popup_class = "comment-tooltip-popup popup-down" if is_upper_half else "comment-tooltip-popup popup-up"
 
@@ -592,6 +567,8 @@ def render_stories_table(table_df, comments_by_id):
         }});
         </script>
     ''', height=480, scrolling=False)
+
+
 def sleek_chart(status_count_df):
     color_map = {
         "Available for UAT": "#0f766e",
@@ -698,7 +675,7 @@ render_stories_table(table_display, comments_by_id)
 st.markdown('### Response Time Analysis (Pii vs SeaTec)')
 st.markdown(
     '<div style="color:#475569;font-size:14px;margin-bottom:16px;">'
-    'Tracking response turnarounds between <b style="color:#b45309;">Pii</b> (Vinita & Madhuja) and <b style="color:#2563eb;">SeaTec</b> (Terence). '
+    'Tracking response turnarounds between <b style="color:#4f46e5;">Pii</b> (Vinita & Madhuja) and <b style="color:#2563eb;">SeaTec</b> (Terence). '
     'Showing individual turnaround splits, sorted strictly by <b>total cumulative turnaround time</b> (longest to shortest).</div>',
     unsafe_allow_html=True,
 )
@@ -706,17 +683,12 @@ st.markdown(
 turnaround_df = analyze_comment_turnarounds(df, comments_by_id, title_by_id)
 
 if not turnaround_df.empty:
-    # 1. Calculate cumulative total turnaround duration per card to determine y-axis ordering
     card_totals = turnaround_df.groupby("Card Label")["Days"].sum().reset_index()
     card_totals_sorted = card_totals.sort_values("Days", ascending=False)
-
-    # In Plotly horizontal bar charts, y-axis categoryarray lists categories from bottom to top.
-    # Reversing categoryarray puts the card with the LONGEST CUMULATIVE DURATION at the TOP.
     longest_first_order = card_totals_sorted["Card Label"].tolist()[::-1]
 
-    color_map = {"Pii": "#4f46e5", "SeaTec": "#2563eb"}
+    color_map = {"Pii": "#be123c", "SeaTec": "#2563eb"}
     
-    # 2. Render stacked/split horizontal bar chart preserving individual turnaround splits
     fig_delays = px.bar(
         turnaround_df,
         x='Days',
@@ -743,7 +715,6 @@ if not turnaround_df.empty:
         )
     )
 
-    # Enforce y-axis ordering based on cumulative total turnaround duration
     fig_delays.update_yaxes(
         categoryorder='array',
         categoryarray=longest_first_order,
