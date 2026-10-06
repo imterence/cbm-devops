@@ -251,71 +251,94 @@ def local_css():
             color: #475569 !important;
         }
 
-        /* ── Modern Universal Radio Button Pills Styling ───────────────── */
-        [data-testid="stRadio"] fieldset {
-            border: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
 
-        [data-testid="stRadio"] [role="radiogroup"],
-        [data-testid="stRadio"] > div {
-            display: flex !important;
-            flex-direction: row !important;
-            gap: 8px !important;
-            flex-wrap: wrap !important;
-            align-items: center !important;
-        }
 
-        /* Hide the widget title header to prevent extra un-clickable pill buttons */
-        [data-testid="stWidgetLabel"] {
-            display: none !important;
-        }
+/* ── Modern Rounded Pill Buttons (Strict Option Targeting Only) ── */
+[data-testid="stRadio"] fieldset {
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
 
-        /* Target ONLY actual option labels inside the radio container */
-        [data-testid="stRadio"] [role="radiogroup"] label,
-        [data-testid="stRadio"] div[data-baseweb="radio"] {
-            background: #ffffff !important;
-            border: 1px solid #cbd5e1 !important;
-            border-radius: 999px !important;
-            padding: 6px 16px !important;
-            margin: 0 !important;
-            cursor: pointer !important;
-            transition: all 0.2s ease !important;
-            color: #475569 !important;
-            font-size: 13px !important;
-            font-weight: 600 !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
-        }
+[data-testid="stRadio"] [role="radiogroup"],
+[data-testid="stRadio"] fieldset > div {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+}
 
-        [data-testid="stRadio"] label:hover,
-        [data-testid="stRadio"] div[data-baseweb="radio"]:hover {
-            border-color: #2f5edb !important;
-            color: #2f5edb !important;
-            background: #f8fafc !important;
-        }
+/* Completely obliterate the header label / legend element */
+[data-testid="stWidgetLabel"],
+[data-testid="stRadio"] legend,
+[data-testid="stRadio"] > label,
+[data-testid="stRadio"] fieldset > label,
+[data-testid="stRadio"] fieldset > div:first-child:not([role="radiogroup"]) {
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
 
-        /* Active / Selected Pill Styling */
-        [data-testid="stRadio"] label:has(input:checked),
-        [data-testid="stRadio"] [aria-checked="true"],
-        [data-testid="stRadio"] label[data-checked="true"] {
-            background: #eef4ff !important;
-            border-color: #2f5edb !important;
-            color: #2f5edb !important;
-            box-shadow: 0 0 0 1px #2f5edb !important;
-        }
+/* Target ONLY option labels inside role="radiogroup" */
+[data-testid="stRadio"] [role="radiogroup"] label {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 999px !important;
+    padding: 6px 16px !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    color: #475569 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+}
 
-        /* Hide the native radio circle indicator dot */
-        [data-testid="stRadio"] label input[type="radio"],
-        [data-testid="stRadio"] label > div:first-child,
-        [data-testid="stRadio"] div[data-baseweb="radio"] > div:first-child {
-            display: none !important;
-            width: 0 !important;
-            height: 0 !important;
-            opacity: 0 !important;
-        }
+[data-testid="stRadio"] [role="radiogroup"] label:hover {
+    border-color: #2f5edb !important;
+    color: #2f5edb !important;
+    background: #f8fafc !important;
+}
+
+/* Active / Selected Pill State */
+[data-testid="stRadio"] [role="radiogroup"] label:has(input:checked),
+[data-testid="stRadio"] [role="radiogroup"] label[data-checked="true"] {
+    background: #eef4ff !important;
+    border-color: #2f5edb !important;
+    color: #2f5edb !important;
+    box-shadow: 0 0 0 1px #2f5edb !important;
+}
+
+/* Target and hide native radio dots & SVGs */
+[data-testid="stRadio"] [role="radiogroup"] input[type="radio"],
+[data-testid="stRadio"] [role="radiogroup"] label > div:first-child,
+[data-testid="stRadio"] svg {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    pointer-events: none !important;
+}
+
+
+
+
 
         [data-testid="stSelectbox"] label {
             color: #0f172a !important;
@@ -634,15 +657,16 @@ if 'selected_state' not in st.session_state:
 st.markdown('### Overview')
 render_kpi_cards(state_list, len(df), st.session_state['selected_state'])
 
+
 # ── Filter Bar ─────────────────────────────────────────────────────────────────
 filter_col, _ = st.columns([5, 1])
 with filter_col:
     filter_options = ["All Board Columns"] + [row['State'] for row in state_list]
     selected_filter = st.radio(
-        "Board Column",
+        "Board Column",  # 👈 Give it a standard string label
         filter_options,
         horizontal=True,
-        label_visibility="collapsed",
+        label_visibility="collapsed",  # 👈 Streamlit hides the label natively
         key="state_filter_radio",
     )
     st.session_state['selected_state'] = (
