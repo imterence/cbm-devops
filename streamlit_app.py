@@ -253,15 +253,15 @@ def local_css():
 
 
 
-/* ── Modern Rounded Pill Buttons (Strict Option Targeting Only) ── */
+/* ── Modern Rounded Pill Buttons (Bulletproof Deployed CSS) ── */
 [data-testid="stRadio"] fieldset {
     border: none !important;
     padding: 0 !important;
     margin: 0 !important;
 }
 
-[data-testid="stRadio"] [role="radiogroup"],
-[data-testid="stRadio"] fieldset > div {
+[data-testid="stRadio"] fieldset > div,
+[data-testid="stRadio"] [role="radiogroup"] {
     display: flex !important;
     flex-direction: row !important;
     gap: 8px !important;
@@ -269,28 +269,23 @@ def local_css():
     align-items: center !important;
 }
 
-/* Completely obliterate the header label / legend element */
+/* Completely hide the header label / legend element */
 [data-testid="stWidgetLabel"],
 [data-testid="stRadio"] legend,
-[data-testid="stRadio"] > label,
-[data-testid="stRadio"] fieldset > label,
-[data-testid="stRadio"] fieldset > div:first-child:not([role="radiogroup"]) {
+[data-testid="stRadio"] > label {
     display: none !important;
     visibility: hidden !important;
-    position: absolute !important;
-    width: 0 !important;
     height: 0 !important;
+    width: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
-    font-size: 0 !important;
-    line-height: 0 !important;
     opacity: 0 !important;
     pointer-events: none !important;
 }
 
-/* Target ONLY option labels inside role="radiogroup" */
-[data-testid="stRadio"] [role="radiogroup"] label {
+/* Base Pill Styling for ALL Radio Option Labels */
+[data-testid="stRadio"] label {
     background: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
     border-radius: 999px !important;
@@ -306,24 +301,28 @@ def local_css():
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
 }
 
-[data-testid="stRadio"] [role="radiogroup"] label:hover {
+[data-testid="stRadio"] label:hover {
     border-color: #2f5edb !important;
     color: #2f5edb !important;
     background: #f8fafc !important;
 }
 
 /* Active / Selected Pill State */
-[data-testid="stRadio"] [role="radiogroup"] label:has(input:checked),
-[data-testid="stRadio"] [role="radiogroup"] label[data-checked="true"] {
+[data-testid="stRadio"] label:has(input:checked),
+[data-testid="stRadio"] label[data-checked="true"],
+[data-testid="stRadio"] [aria-checked="true"] {
     background: #eef4ff !important;
     border-color: #2f5edb !important;
     color: #2f5edb !important;
     box-shadow: 0 0 0 1px #2f5edb !important;
 }
 
-/* Target and hide native radio dots & SVGs */
-[data-testid="stRadio"] [role="radiogroup"] input[type="radio"],
-[data-testid="stRadio"] [role="radiogroup"] label > div:first-child,
+/* WIPE OUT ALL NATIVE RADIO CIRCLE TOGGLE DOTS & BaseWeb RADIO RINGS */
+[data-testid="stRadio"] input[type="radio"],
+[data-testid="stRadio"] label > div:first-child:not(:only-child),
+[data-testid="stRadio"] label [data-baseweb="radio"] > div:first-child,
+[data-testid="stRadio"] label [data-baseweb="radio"] > span:first-child,
+[data-testid="stRadio"] label > span:first-child:not(:only-child),
 [data-testid="stRadio"] svg {
     display: none !important;
     visibility: hidden !important;
@@ -335,7 +334,6 @@ def local_css():
     position: absolute !important;
     pointer-events: none !important;
 }
-
 
 
 
