@@ -696,7 +696,7 @@ if not turnaround_df.empty:
     # Reversing categoryarray puts the card with the LONGEST CUMULATIVE DURATION at the TOP.
     longest_first_order = card_totals_sorted["Card Label"].tolist()[::-1]
 
-    color_map = {"Pii": "#b45309", "SeaTec": "#2563eb"}
+    color_map = {"Pii": "#be123c", "SeaTec": "#2563eb"}
     
     # 2. Render stacked/split horizontal bar chart preserving individual turnaround splits
     fig_delays = px.bar(
