@@ -251,7 +251,6 @@ def local_css():
             color: #475569 !important;
         }
 
-<<<<<<< HEAD
         /* ── Modern Universal Radio Button Pills Styling ───────────────── */
         [data-testid="stRadio"] fieldset {
             border: none !important;
@@ -260,12 +259,6 @@ def local_css():
         }
 
         [data-testid="stRadio"] [role="radiogroup"],
-=======
-        [data-testid="stRadio"] fieldset {
-            border: none !important;
-        }
-
->>>>>>> c46781c51613abe74afcf711227683d1f480a891
         [data-testid="stRadio"] > div {
             display: flex !important;
             flex-direction: row !important;
@@ -274,7 +267,6 @@ def local_css():
             align-items: center !important;
         }
 
-<<<<<<< HEAD
         /* Hide the widget title header to prevent extra un-clickable pill buttons */
         [data-testid="stWidgetLabel"] {
             display: none !important;
@@ -288,19 +280,11 @@ def local_css():
             border-radius: 999px !important;
             padding: 6px 16px !important;
             margin: 0 !important;
-=======
-        [data-testid="stRadio"] > div > label {
-            background: #ffffff !important;
-            border: 1px solid #e2e8f0 !important;
-            border-radius: 999px !important;
-            padding: 6px 14px !important;
->>>>>>> c46781c51613abe74afcf711227683d1f480a891
             cursor: pointer !important;
             transition: all 0.2s ease !important;
             color: #475569 !important;
             font-size: 13px !important;
             font-weight: 600 !important;
-<<<<<<< HEAD
             display: inline-flex !important;
             align-items: center !important;
             box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
@@ -331,23 +315,6 @@ def local_css():
             width: 0 !important;
             height: 0 !important;
             opacity: 0 !important;
-=======
-        }
-
-        [data-testid="stRadio"] > div > label:hover {
-            border-color: #2f5edb !important;
-            color: #0f172a !important;
-        }
-
-        [data-testid="stRadio"] > div > label:has(input:checked) {
-            background: #eef4ff !important;
-            border-color: #2f5edb !important;
-            color: #2f5edb !important;
-        }
-
-        [data-testid="stRadio"] > div > label > div:first-child {
-            display: none !important;
->>>>>>> c46781c51613abe74afcf711227683d1f480a891
         }
 
         [data-testid="stSelectbox"] label {
