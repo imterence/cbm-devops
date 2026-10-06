@@ -1,0 +1,6 @@
+[theme]
+primaryColor      = "#3B82F6"     # Electric Blue — buttons, focus rings, accents
+backgroundColor   = "#070B10"     # Deep space background
+secondaryBackgroundColor = "#0d1117"  # Card / sidebar surface
+textColor         = "#E2E8F0"     # Soft white body text
+font              = "sans serif"
